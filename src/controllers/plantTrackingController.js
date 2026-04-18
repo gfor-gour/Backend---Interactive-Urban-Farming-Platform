@@ -1,7 +1,3 @@
-/**
- * Plant tracking HTTP handlers
- */
-
 import * as plantTrackingService from '../services/plantTrackingService.js';
 import ResponseHandler from '../utils/responseHandler.js';
 

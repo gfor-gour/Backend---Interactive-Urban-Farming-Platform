@@ -1,6 +1,3 @@
-/**
- * Orders — create with transaction, role-scoped listing, status updates
- */
 
 import { Prisma } from '@prisma/client';
 import prisma from '../../lib/prisma.js';
@@ -28,9 +25,7 @@ const mapOrder = (o) => ({
     : o.produce,
 });
 
-/**
- * POST /api/orders — customer; atomic stock decrement
- */
+
 export const createOrder = async (customerId, body) => {
   const { produceId, quantity } = body;
 
@@ -113,9 +108,7 @@ export const createOrder = async (customerId, body) => {
   return mapOrder(order);
 };
 
-/**
- * GET /api/orders — customer: own; vendor: for their produce; admin: all
- */
+
 export const listOrdersForUser = async (user, query) => {
   const page = Math.min(
     Math.max(parseInt(query.page, 10) || DEFAULT_PAGE, 1),
@@ -176,9 +169,6 @@ export const listOrdersForUser = async (user, query) => {
   return { data, page, limit, total };
 };
 
-/**
- * PATCH /api/orders/:id/status — vendor (own produce) or admin
- */
 export const updateOrderStatus = async (orderId, user, status) => {
   const order = await prisma.order.findUnique({
     where: { id: orderId },

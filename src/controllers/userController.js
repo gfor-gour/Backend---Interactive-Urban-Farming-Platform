@@ -1,22 +1,6 @@
-/**
- * User Controller
- * Handles HTTP request/response parsing
- * Delegates business logic to UserService
- * 
- * Key principles:
- * - No business logic here
- * - Only parse requests and format responses
- * - Call service methods
- * - Return appropriate HTTP status codes
- */
-
 import userService from '../services/userService.js';
 
 class UserController {
-  /**
-   * GET /api/v1/users
-   * Get all users with pagination
-   */
   async getAllUsers(req, res) {
     try {
       const page = parseInt(req.query.page) || 1;
@@ -38,10 +22,7 @@ class UserController {
     }
   }
 
-  /**
-   * GET /api/v1/users/:id
-   * Get single user by ID
-   */
+
   async getUserById(req, res) {
     try {
       const { id } = req.params;
@@ -57,10 +38,6 @@ class UserController {
     }
   }
 
-  /**
-   * POST /api/v1/users
-   * Create new user
-   */
   async createUser(req, res) {
     try {
       const { email, name } = req.body;
@@ -77,10 +54,6 @@ class UserController {
     }
   }
 
-  /**
-   * PUT /api/v1/users/:id
-   * Update user
-   */
   async updateUser(req, res) {
     try {
       const { id } = req.params;
@@ -98,10 +71,6 @@ class UserController {
     }
   }
 
-  /**
-   * DELETE /api/v1/users/:id
-   * Delete user
-   */
   async deleteUser(req, res) {
     try {
       const { id } = req.params;
@@ -118,10 +87,6 @@ class UserController {
     }
   }
 
-  /**
-   * GET /api/v1/users/search?q=query
-   * Search users
-   */
   async searchUsers(req, res) {
     try {
       const { q } = req.query;

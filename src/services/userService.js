@@ -1,28 +1,13 @@
-/**
- * User Service
- * Contains all business logic for user-related operations
- * 
- * Pattern:
- * - Handles database operations via Prisma
- * - Implements validation and business rules
- * - Controllers call these methods
- * - Never directly exposes database errors to client
- */
 
 import prisma from '../../lib/prisma.js';
 import { paginate } from '../../lib/database.js';
 
 class UserService {
-  /**
-   * Get all users with pagination
-   */
+  
   async getAllUsers(page = 1, limit = 10) {
     return await paginate('user', {}, page, limit, { createdAt: 'desc' });
   }
 
-  /**
-   * Get single user by ID
-   */
   async getUserById(id) {
     try {
       const user = await prisma.user.findUnique({
@@ -46,18 +31,13 @@ class UserService {
     }
   }
 
-  /**
-   * Create new user
-   * Validates email uniqueness and input
-   */
+
   async createUser(userData) {
     try {
-      // Validate input
       if (!userData.email || !userData.name) {
         throw new Error('Email and name are required');
       }
 
-      // Check if user already exists
       const existingUser = await prisma.user.findUnique({
         where: { email: userData.email },
       });
@@ -66,7 +46,6 @@ class UserService {
         throw new Error('User with this email already exists');
       }
 
-      // Create user
       const user = await prisma.user.create({
         data: {
           email: userData.email,
@@ -80,12 +59,9 @@ class UserService {
     }
   }
 
-  /**
-   * Update user
-   */
   async updateUser(id, updateData) {
     try {
-      // Prevent email update to already-taken email
+
       if (updateData.email) {
         const emailTaken = await prisma.user.findUnique({
           where: { email: updateData.email },
@@ -107,9 +83,6 @@ class UserService {
     }
   }
 
-  /**
-   * Delete user
-   */
   async deleteUser(id) {
     try {
       const user = await prisma.user.delete({
@@ -122,9 +95,7 @@ class UserService {
     }
   }
 
-  /**
-   * Search users by name or email
-   */
+
   async searchUsers(query) {
     try {
       const users = await prisma.user.findMany({

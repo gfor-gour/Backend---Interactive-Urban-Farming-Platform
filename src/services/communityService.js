@@ -1,6 +1,3 @@
-/**
- * Community forum — posts with author shaping (no email)
- */
 
 import prisma from '../../lib/prisma.js';
 import { AuthorizationError, NotFoundError, ValidationError } from '../utils/errors.js';
@@ -19,9 +16,6 @@ const mapPostWithAuthor = (row) => {
   };
 };
 
-/**
- * GET /api/community — public list
- */
 export const listCommunityPosts = async (query) => {
   const page = Math.min(
     Math.max(parseInt(query.page, 10) || DEFAULT_PAGE, 1),
@@ -51,9 +45,6 @@ export const listCommunityPosts = async (query) => {
   return { data, page, limit, total };
 };
 
-/**
- * GET /api/community/:id — public single
- */
 export const getCommunityPostById = async (id) => {
   const post = await prisma.communityPost.findUnique({
     where: { id },
@@ -71,9 +62,6 @@ export const getCommunityPostById = async (id) => {
   return { post: mapPostWithAuthor(post) };
 };
 
-/**
- * POST /api/community — any authenticated user
- */
 export const createCommunityPost = async (userId, body) => {
   const content = String(body.postContent ?? '').trim();
   if (content.length < 10) {
@@ -96,9 +84,7 @@ export const createCommunityPost = async (userId, body) => {
   return mapPostWithAuthor(post);
 };
 
-/**
- * PUT /api/community/:id — owner only
- */
+
 export const updateCommunityPost = async (postId, userId, body) => {
   const existing = await prisma.communityPost.findUnique({
     where: { id: postId },
@@ -144,9 +130,7 @@ export const updateCommunityPost = async (postId, userId, body) => {
   return mapPostWithAuthor(post);
 };
 
-/**
- * DELETE /api/community/:id — owner or admin
- */
+
 export const deleteCommunityPost = async (postId, user) => {
   const existing = await prisma.communityPost.findUnique({
     where: { id: postId },

@@ -1,7 +1,3 @@
-/**
- * Vendor Controller — vendor-facing endpoints
- */
-
 import * as vendorService from '../services/vendorService.js';
 import ResponseHandler from '../utils/responseHandler.js';
 

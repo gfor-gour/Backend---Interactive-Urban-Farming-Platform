@@ -1,7 +1,3 @@
-/**
- * Plant tracking logs for rental bookings
- */
-
 import prisma from '../../lib/prisma.js';
 import {
   AuthorizationError,
@@ -9,9 +5,6 @@ import {
   ValidationError,
 } from '../utils/errors.js';
 
-/**
- * Ensure booking exists and belongs to customer
- */
 const getBookingForCustomerOrThrow = async (rentalBookingId, customerId) => {
   const booking = await prisma.rentalBooking.findUnique({
     where: { id: rentalBookingId },
@@ -29,9 +22,6 @@ const getBookingForCustomerOrThrow = async (rentalBookingId, customerId) => {
   return booking;
 };
 
-/**
- * POST /api/plant-tracking — log a plant update (new history row)
- */
 export const createPlantTrackingLog = async (customerId, body) => {
   const { rentalBookingId, plantName, healthStatus, notes } = body;
 
@@ -54,9 +44,6 @@ export const createPlantTrackingLog = async (customerId, body) => {
   return log;
 };
 
-/**
- * GET /api/plant-tracking/:bookingId — history for a booking (customer owns booking)
- */
 export const getPlantTrackingHistory = async (bookingId, customerId) => {
   await getBookingForCustomerOrThrow(bookingId, customerId);
 
@@ -68,9 +55,7 @@ export const getPlantTrackingHistory = async (bookingId, customerId) => {
   return { bookingId, logs };
 };
 
-/**
- * PATCH /api/plant-tracking/:id — update health (and optionally notes) on a log entry
- */
+
 export const updatePlantTrackingEntry = async (plantTrackingId, customerId, body) => {
   const entry = await prisma.plantTracking.findUnique({
     where: { id: plantTrackingId },

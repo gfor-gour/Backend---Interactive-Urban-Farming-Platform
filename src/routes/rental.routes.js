@@ -1,7 +1,3 @@
-/**
- * Farm rental routes — /api/rentals
- */
-
 import express from 'express';
 import { body, param, query, check } from 'express-validator';
 import * as rentalController from '../controllers/rentalController.js';
@@ -19,14 +15,8 @@ const listQuery = [
   query('size').optional().isString().trim().isLength({ min: 1, max: 120 }),
 ];
 
-/**
- * GET /api/rentals — public
- */
 router.get('/', listQuery, validate, rentalController.listSpaces);
 
-/**
- * GET /api/rentals/bookings — customer’s own bookings (before /:id)
- */
 router.get(
   '/bookings',
   authenticate,
@@ -39,9 +29,6 @@ router.get(
   rentalController.listMyBookings
 );
 
-/**
- * POST /api/rentals — vendor listing
- */
 router.post(
   '/',
   authenticate,
@@ -68,9 +55,7 @@ router.post(
   rentalController.createSpace
 );
 
-/**
- * POST /api/rentals/:id/book — customer
- */
+
 router.post(
   '/:id/book',
   authenticate,
@@ -92,9 +77,6 @@ router.post(
   rentalController.bookSpace
 );
 
-/**
- * GET /api/rentals/:id — public detail
- */
 router.get(
   '/:id',
   [param('id').isUUID().withMessage('Invalid rental space id')],
@@ -102,9 +84,7 @@ router.get(
   rentalController.getSpaceById
 );
 
-/**
- * PUT /api/rentals/:id — vendor, owns space
- */
+
 router.put(
   '/:id',
   authenticate,

@@ -1,6 +1,3 @@
-/**
- * Custom Error Classes for API responses
- */
 
 export class AppError extends Error {
   constructor(message, statusCode = 500) {

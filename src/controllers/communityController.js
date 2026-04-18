@@ -1,7 +1,3 @@
-/**
- * Community forum HTTP handlers
- */
-
 import * as communityService from '../services/communityService.js';
 import ResponseHandler from '../utils/responseHandler.js';
 

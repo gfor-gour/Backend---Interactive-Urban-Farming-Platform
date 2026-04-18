@@ -1,7 +1,3 @@
-/**
- * Vendor Service
- * Vendor profiles, sustainability certifications, admin vendor operations
- */
 
 import prisma from '../../lib/prisma.js';
 import {
@@ -14,9 +10,7 @@ const DEFAULT_PAGE = 1;
 const DEFAULT_LIMIT = 10;
 const MAX_LIMIT = 100;
 
-/**
- * Sync VendorProfile.certificationStatus from individual cert rows
- */
+
 export const syncVendorProfileCertificationStatus = async (vendorProfileId) => {
   const certs = await prisma.sustainabilityCert.findMany({
     where: { vendorId: vendorProfileId },
@@ -49,9 +43,7 @@ export const syncVendorProfileCertificationStatus = async (vendorProfileId) => {
   });
 };
 
-/**
- * Resolve VendorProfile for a VENDOR user or throw
- */
+
 const getVendorProfileForUserOrThrow = async (userId) => {
   const profile = await prisma.vendorProfile.findUnique({
     where: { userId },
@@ -62,9 +54,6 @@ const getVendorProfileForUserOrThrow = async (userId) => {
   return profile;
 };
 
-/**
- * POST — create VendorProfile if not exists (VENDOR only)
- */
 export const createVendorProfile = async (userId, data) => {
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user) {
@@ -106,9 +95,7 @@ export const createVendorProfile = async (userId, data) => {
   return profile;
 };
 
-/**
- * GET public vendor by VendorProfile id
- */
+
 export const getVendorPublicById = async (vendorProfileId) => {
   const vendor = await prisma.vendorProfile.findUnique({
     where: { id: vendorProfileId },
@@ -147,9 +134,7 @@ export const getVendorPublicById = async (vendorProfileId) => {
   };
 };
 
-/**
- * PUT — update own profile
- */
+
 export const updateVendorProfileForUser = async (userId, data) => {
   await getVendorProfileForUserOrThrow(userId);
 
@@ -177,9 +162,6 @@ export const updateVendorProfileForUser = async (userId, data) => {
   return profile;
 };
 
-/**
- * POST — submit sustainability certification
- */
 export const submitSustainabilityCertification = async (userId, data) => {
   const profile = await getVendorProfileForUserOrThrow(userId);
 
@@ -199,9 +181,7 @@ export const submitSustainabilityCertification = async (userId, data) => {
   return cert;
 };
 
-/**
- * Admin: list vendors with pagination + optional certificationStatus filter
- */
+
 export const listVendorsForAdmin = async (query) => {
   const page = Math.min(
     Math.max(parseInt(query.page, 10) || DEFAULT_PAGE, 1),
@@ -252,10 +232,7 @@ export const listVendorsForAdmin = async (query) => {
   return { data, page, limit, total };
 };
 
-/**
- * Admin: approve / suspend vendor user account (User.status)
- * @param {string} vendorUserId - User.id of the vendor
- */
+
 export const updateVendorUserStatus = async (vendorUserId, status) => {
   const user = await prisma.user.findUnique({
     where: { id: vendorUserId },
@@ -285,9 +262,7 @@ export const updateVendorUserStatus = async (vendorUserId, status) => {
   return updated;
 };
 
-/**
- * Admin: approve or reject a sustainability certification
- */
+
 export const updateCertificationStatus = async (certId, status) => {
   const cert = await prisma.sustainabilityCert.findUnique({
     where: { id: certId },

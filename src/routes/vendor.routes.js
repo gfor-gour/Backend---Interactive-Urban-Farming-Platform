@@ -1,8 +1,3 @@
-/**
- * Vendor & admin vendor routes
- * Mount vendorRouter at /api/vendors, adminVendorRouter at /api/admin
- */
-
 import express from 'express';
 import { body, param, query, check } from 'express-validator';
 import * as vendorController from '../controllers/vendorController.js';
@@ -33,9 +28,7 @@ const optionalLatLng = [
   body('lng').optional().isFloat({ min: -180, max: 180 }).withMessage('lng must be between -180 and 180'),
 ];
 
-/**
- * POST /api/vendors/profile [VENDOR]
- */
+
 vendorRouter.post(
   '/profile',
   authenticate,
@@ -49,9 +42,6 @@ vendorRouter.post(
   vendorController.createProfile
 );
 
-/**
- * PUT /api/vendors/profile [VENDOR]
- */
 vendorRouter.put(
   '/profile',
   authenticate,
@@ -77,9 +67,6 @@ vendorRouter.put(
   vendorController.updateProfile
 );
 
-/**
- * POST /api/vendors/certifications [VENDOR]
- */
 vendorRouter.post(
   '/certifications',
   authenticate,
@@ -116,10 +103,7 @@ vendorRouter.post(
   vendorController.submitCertification
 );
 
-/**
- * GET /api/vendors/:id [public]
- * Register after static segments so "profile" / "certifications" are not captured
- */
+
 vendorRouter.get(
   '/:id',
   [param('id').isUUID().withMessage('Invalid vendor id')],
@@ -127,11 +111,7 @@ vendorRouter.get(
   vendorController.getVendorById
 );
 
-// --- Admin (mount at /api/admin) ---
 
-/**
- * GET /api/admin/vendors [ADMIN]
- */
 adminVendorRouter.get(
   '/vendors',
   authenticate,
@@ -148,10 +128,6 @@ adminVendorRouter.get(
   adminVendorController.listVendors
 );
 
-/**
- * PATCH /api/admin/vendors/:id/status [ADMIN]
- * :id = vendor User.id
- */
 adminVendorRouter.patch(
   '/vendors/:id/status',
   authenticate,
@@ -168,9 +144,7 @@ adminVendorRouter.patch(
   adminVendorController.patchVendorUserStatus
 );
 
-/**
- * PATCH /api/admin/certifications/:id [ADMIN]
- */
+
 adminVendorRouter.patch(
   '/certifications/:id',
   authenticate,

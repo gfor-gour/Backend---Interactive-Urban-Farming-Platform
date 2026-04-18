@@ -1,6 +1,3 @@
-/**
- * Produce marketplace — listing, CRUD, soft delete
- */
 
 import { Prisma } from '@prisma/client';
 import prisma from '../../lib/prisma.js';
@@ -20,9 +17,6 @@ const mapProduceRow = (p) => ({
   price: decimalToNumber(p.price),
 });
 
-/**
- * Vendor must have approved certification to create produce
- */
 const getVendorProfileForProduceOrThrow = async (userId) => {
   const profile = await prisma.vendorProfile.findUnique({
     where: { userId },
@@ -42,9 +36,6 @@ const getVendorProfileForProduceOrThrow = async (userId) => {
   return profile;
 };
 
-/**
- * GET /api/produce — public catalog
- */
 export const listProduce = async (query) => {
   const page = Math.min(
     Math.max(parseInt(query.page, 10) || DEFAULT_PAGE, 1),
@@ -129,9 +120,7 @@ export const listProduce = async (query) => {
   return { data, page, limit, total };
 };
 
-/**
- * GET /api/produce/:id — single item with vendor info
- */
+
 export const getProduceById = async (produceId) => {
   const produce = await prisma.produce.findFirst({
     where: { id: produceId, isActive: true },
@@ -185,9 +174,6 @@ const assertVendorOwnsProduce = async (produceId, userId) => {
   return produce;
 };
 
-/**
- * POST /api/produce
- */
 export const createProduce = async (userId, body) => {
   const profile = await getVendorProfileForProduceOrThrow(userId);
 
@@ -207,9 +193,7 @@ export const createProduce = async (userId, body) => {
   return mapProduceRow(produce);
 };
 
-/**
- * PUT /api/produce/:id — vendor, own only
- */
+
 export const updateProduceForVendor = async (produceId, userId, body) => {
   await assertVendorOwnsProduce(produceId, userId);
 
@@ -229,9 +213,7 @@ export const updateProduceForVendor = async (produceId, userId, body) => {
   return mapProduceRow(updated);
 };
 
-/**
- * DELETE /api/produce/:id — soft delete; vendor (own) or admin
- */
+
 export const softDeleteProduce = async (produceId, user) => {
   const produce = await prisma.produce.findUnique({
     where: { id: produceId },

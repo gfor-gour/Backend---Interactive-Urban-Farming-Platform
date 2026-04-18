@@ -1,23 +1,13 @@
-/**
- * Rate Limiting Middleware
- * Prevents brute force attacks and DoS attacks
- * Uses express-rate-limit for flexible configuration
- */
 
 import rateLimit, { ipKeyGenerator } from 'express-rate-limit';
 import ResponseHandler from '../utils/responseHandler.js';
 
-/**
- * Auth routes limiter
- * 10 requests per 15 minutes (aggressive for security)
- */
 export const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10, // 10 requests per windowMs
+  windowMs: 15 * 60 * 1000, 
+  max: 10, 
   message: 'Too many authentication attempts. Please try again later.',
-  standardHeaders: false, // Don't return rate limit info in headers
+  standardHeaders: false,
   skip: (req) => {
-    // Skip rate limiting for health checks and other safe endpoints
     return req.path === '/health';
   },
   handler: (req, res) => {
@@ -27,23 +17,18 @@ export const authLimiter = rateLimit({
       429
     );
   },
-  // Use IP address for rate limiting (or user ID if authenticated)
   keyGenerator: (req) => {
     return req.user?.id || ipKeyGenerator(req);
   },
 });
 
-/**
- * General API limiter
- * 100 requests per minute
- */
+
 export const generalLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minute
   max: 100, // 100 requests per windowMs
   message: 'Too many requests from this IP.',
   standardHeaders: false,
   skip: (req) => {
-    // Skip rate limiting for health checks
     return req.path === '/health';
   },
   handler: (req, res) => {
@@ -55,13 +40,10 @@ export const generalLimiter = rateLimit({
   },
 });
 
-/**
- * Strict limiter for sensitive operations
- * 5 requests per hour
- */
+
 export const strictLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hour
-  max: 5, // 5 requests per windowMs
+  windowMs: 60 * 60 * 1000, 
+  max: 5,
   message: 'Too many requests for this operation.',
   standardHeaders: false,
   handler: (req, res) => {
@@ -73,17 +55,13 @@ export const strictLimiter = rateLimit({
   },
 });
 
-/**
- * Login-specific limiter
- * 5 requests per 15 minutes per email
- */
 export const loginLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // 5 attempts
+  windowMs: 15 * 60 * 1000, 
+  max: 5, 
   message: 'Too many login attempts.',
   standardHeaders: false,
   keyGenerator: (req) => {
-    // Rate limit by email address if provided, otherwise by IP
+  
     return req.body?.email || ipKeyGenerator(req);
   },
   handler: (req, res) => {
@@ -95,13 +73,9 @@ export const loginLimiter = rateLimit({
   },
 });
 
-/**
- * Register-specific limiter
- * 3 accounts per hour per IP
- */
 export const registerLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hour
-  max: 3, // 3 registrations
+  windowMs: 60 * 60 * 1000, 
+  max: 3, 
   message: 'Too many accounts created from this IP.',
   standardHeaders: false,
   handler: (req, res) => {

@@ -1,7 +1,3 @@
-/**
- * Configuration Module
- * Handles environment variables, database connections, and app config
- */
 
 export default {
   database: {

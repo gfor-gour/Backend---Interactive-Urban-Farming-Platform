@@ -1,7 +1,3 @@
-/**
- * Produce HTTP handlers
- */
-
 import * as produceService from '../services/produceService.js';
 import ResponseHandler from '../utils/responseHandler.js';
 

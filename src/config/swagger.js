@@ -1,14 +1,9 @@
-/**
- * OpenAPI 3.0 spec for Urban Farming API (generated from JSDoc via swagger-jsdoc).
- */
-
 import path from 'path';
 import { fileURLToPath } from 'url';
 import swaggerJsdoc from 'swagger-jsdoc';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-/** @type {import('swagger-jsdoc').SwaggerDefinition} */
 const swaggerDefinition = {
   openapi: '3.0.0',
   info: {

@@ -1,7 +1,3 @@
-/**
- * Order HTTP handlers
- */
-
 import * as orderService from '../services/orderService.js';
 import ResponseHandler from '../utils/responseHandler.js';
 

@@ -1,7 +1,3 @@
-/**
- * Rental space & booking HTTP handlers
- */
-
 import * as rentalService from '../services/rentalService.js';
 import ResponseHandler from '../utils/responseHandler.js';
 

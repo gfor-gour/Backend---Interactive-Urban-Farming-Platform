@@ -1,16 +1,7 @@
-/**
- * Authentication Middleware
- * Verifies JWT access token from Authorization header
- * Attaches user data to req.user
- */
 
 import { verifyAccessToken } from '../../lib/jwt.js';
 import { AuthenticationError } from '../utils/errors.js';
 
-/**
- * Middleware to authenticate JWT access token
- * Expects: Authorization: Bearer <token>
- */
 export const authenticate = (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
@@ -33,7 +24,6 @@ export const authenticate = (req, res, next) => {
       });
     }
 
-    // JWT verification errors
     if (error.name === 'JsonWebTokenError') {
       return res.status(401).json({
         success: false,

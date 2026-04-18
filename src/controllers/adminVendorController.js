@@ -1,7 +1,3 @@
-/**
- * Admin Vendor Controller — admin-only vendor & certification management
- */
-
 import * as vendorService from '../services/vendorService.js';
 import ResponseHandler from '../utils/responseHandler.js';
 

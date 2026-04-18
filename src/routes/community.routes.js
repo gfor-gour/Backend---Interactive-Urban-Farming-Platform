@@ -1,6 +1,3 @@
-/**
- * Community forum — /api/community
- */
 
 import express from 'express';
 import { body, param, query, check } from 'express-validator';
@@ -15,14 +12,9 @@ const listQuery = [
   query('limit').optional().isInt({ min: 1, max: 100 }),
 ];
 
-/**
- * GET /api/community — public
- */
+
 router.get('/', listQuery, validate, communityController.listPosts);
 
-/**
- * POST /api/community — any authenticated role
- */
 router.post(
   '/',
   authenticate,
@@ -44,9 +36,6 @@ router.post(
   communityController.createPost
 );
 
-/**
- * GET /api/community/:id — public (after POST /)
- */
 router.get(
   '/:id',
   [param('id').isUUID().withMessage('Invalid post id')],
@@ -54,9 +43,6 @@ router.get(
   communityController.getPostById
 );
 
-/**
- * PUT /api/community/:id — own post only
- */
 router.put(
   '/:id',
   authenticate,
@@ -79,9 +65,6 @@ router.put(
   communityController.updatePost
 );
 
-/**
- * DELETE /api/community/:id — own post or admin
- */
 router.delete(
   '/:id',
   authenticate,
