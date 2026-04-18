@@ -1,0 +1,231 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// ENUMS
+// ============================================================================
+
+enum Role {
+  ADMIN
+  VENDOR
+  CUSTOMER
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  PENDING
+}
+
+enum CertificationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum RentalBookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  DELIVERED
+  CANCELLED
+}
+
+enum HealthStatus {
+  HEALTHY
+  NEEDS_ATTENTION
+  CRITICAL
+  STRUGGLING
+  HARVEST_READY
+}
+
+// ============================================================================
+// MODELS
+// ============================================================================
+
+// User model - Core user entity for all platform users
+model User {
+  id            String   @id @default(uuid())
+  name          String
+  email         String   @unique
+  password      String
+  role          Role
+  status        UserStatus
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  vendorProfile VendorProfile?
+  posts         CommunityPost[]
+  orders        Order[]
+  rentalBookings RentalBooking[]
+
+  @@index([email])
+}
+
+// VendorProfile model - One-to-one with User
+model VendorProfile {
+  id                  String   @id @default(uuid())
+  userId              String   @unique
+  farmName            String
+  certificationStatus CertificationStatus
+  farmLocation        String
+  lat                 Float?
+  lng                 Float?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  // Relations
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  produce             Produce[]
+  rentalSpaces        RentalSpace[]
+  sustainabilityCerts SustainabilityCert[]
+
+  @@index([userId])
+}
+
+// Produce model - Products sold by vendors
+model Produce {
+  id                  String   @id @default(uuid())
+  vendorId            String
+  name                String
+  description         String?
+  price               Decimal
+  category            String
+  certificationStatus CertificationStatus
+  availableQuantity   Int
+  isActive            Boolean  @default(true)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  // Relations
+  vendor              VendorProfile @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  orders              Order[]
+
+  @@index([vendorId])
+}
+
+// RentalSpace model - Spaces available for rent by vendors
+model RentalSpace {
+  id                String   @id @default(uuid())
+  vendorId          String
+  location          String
+  size              String
+  pricePerMonth     Decimal
+  isAvailable       Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  vendor            VendorProfile @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  rentalBookings    RentalBooking[]
+
+  @@index([vendorId])
+}
+
+// RentalBooking model - Join table between Customer and RentalSpace
+model RentalBooking {
+  id              String   @id @default(uuid())
+  customerId      String
+  rentalSpaceId   String
+  startDate       DateTime
+  endDate         DateTime
+  status          RentalBookingStatus
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  customer        User           @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  rentalSpace     RentalSpace    @relation(fields: [rentalSpaceId], references: [id], onDelete: Cascade)
+  plantTracking   PlantTracking[]
+
+  @@index([customerId])
+  @@index([rentalSpaceId])
+}
+
+// PlantTracking model - Track plant health in rental bookings
+model PlantTracking {
+  id              String   @id @default(uuid())
+  rentalBookingId String
+  plantName       String
+  healthStatus    HealthStatus
+  notes           String?
+  lastUpdatedAt   DateTime @default(now())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  rentalBooking   RentalBooking @relation(fields: [rentalBookingId], references: [id], onDelete: Cascade)
+
+  @@index([rentalBookingId])
+}
+
+// Order model - Customer orders for produce
+model Order {
+  id          String   @id @default(uuid())
+  customerId  String
+  produceId   String
+  quantity    Int
+  totalPrice  Decimal
+  status      OrderStatus
+  orderDate   DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  customer    User     @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  produce     Produce  @relation(fields: [produceId], references: [id], onDelete: Cascade)
+
+  @@index([customerId])
+  @@index([produceId])
+}
+
+// CommunityPost model - User posts on community board
+model CommunityPost {
+  id          String   @id @default(uuid())
+  userId      String
+  title       String
+  postContent String
+  postDate    DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// SustainabilityCert model - Sustainability certifications for vendors
+model SustainabilityCert {
+  id               String   @id @default(uuid())
+  vendorId         String
+  certifyingAgency String
+  certificationDate DateTime
+  expiryDate       DateTime
+  documentUrl      String?
+  status           CertificationStatus @default(PENDING)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  // Relations
+  vendor           VendorProfile @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+
+  @@index([vendorId])
+  @@index([status])
+}

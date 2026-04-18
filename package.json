@@ -1,0 +1,49 @@
+{
+  "name": "urban-farming-platform",
+  "version": "1.0.0",
+  "description": "Backend API for Urban Farming Platform",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "build": "echo 'Build script - add your build command here'",
+    "test": "echo 'Test script - add your test command here'",
+    "export:swagger": "node scripts/export-swagger.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate:dev": "prisma migrate dev --name init",
+    "prisma:migrate:prod": "prisma migrate deploy",
+    "prisma:seed": "node prisma/seed.js",
+    "db:setup": "npm run prisma:migrate:dev && npm run prisma:seed"
+  },
+  "keywords": [
+    "express",
+    "urban-farming",
+    "api",
+    "rest"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@faker-js/faker": "^8.3.1",
+    "@prisma/adapter-pg": "^7.7.0",
+    "@prisma/client": "^6.19.3",
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-rate-limit": "^8.3.2",
+    "express-validator": "^7.3.2",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "pg": "^8.20.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "nodemon": "^3.0.2",
+    "prisma": "^6.19.3"
+  }
+}
