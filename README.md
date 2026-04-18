@@ -508,14 +508,10 @@ Comprehensive guides available in the docs folder:
 
 | Document | Purpose | Audience |
 |----------|---------|----------|
-| [**AUTHENTICATION.md**](AUTHENTICATION.md) | Complete auth guide: token strategy, all endpoints, error codes, debugging | Backend developers, integrators |
-| [**UTILITIES.md**](UTILITIES.md) | API patterns: response format, error handling, rate limiting, validation | All developers, QA |
-| [**PRISMA_SETUP.md**](PRISMA_SETUP.md) | Database operations: setup, migrations, connection pooling, queries | Backend developers, DevOps |
+| [**DATABASE.md**](DATABASE.md) | Database operations: setup, migrations, connection pooling, queries | Backend developers, DevOps |
 | [**PERFORMANCE_STRATEGY.md**](PERFORMANCE_STRATEGY.md) | Architecture decisions: query optimization, index strategy, resilience patterns | Technical leads, performance engineering |
 | [**BENCHMARK_REPORT.md**](BENCHMARK_REPORT.md) | Performance testing: before/after metrics, optimization impact, recommendations | Technical leads, DevOps |
-| [**EXPORT_SWAGGER.md**](docs/EXPORT_SWAGGER.md) | Export OpenAPI spec for Postman/Swagger Editor without running server | All developers, QA, reviewers |
-| [**AUTH_QUICK_START.md**](AUTH_QUICK_START.md) | Quick reference: cURL examples, test scenarios | All developers, QA |
-| [**UTILITIES_QUICK_REFERENCE.md**](UTILITIES_QUICK_REFERENCE.md) | Code snippets: copy-paste patterns for common tasks | Backend developers |
+
 
 ---
 
@@ -660,50 +656,10 @@ const authLimiter = rateLimit({
   max: 10,                    // 10 requests
 });
 ```
-
+---
+---
 ---
 
-## 📋 Production Checklist
 
-Before deploying to production:
-
-- [ ] Set strong `JWT_ACCESS_SECRET` and `JWT_REFRESH_SECRET` (32+ characters)
-- [ ] Set `NODE_ENV=production`
-- [ ] Enable HTTPS (required for secure cookies)
-- [ ] Configure `CORS_ORIGIN` to allowed domains
-- [ ] Use cloud PostgreSQL with connection pooling (e.g., Neon, AWS RDS)
-- [ ] Enable database backups
-- [ ] Set up monitoring (error tracking, performance monitoring)
-- [ ] Add request logging (Morgan middleware)
-- [ ] Test rate limiting under load
-- [ ] Verify email verification (optional enhancement)
-- [ ] Implement password reset flow (optional enhancement)
-
----
-
-## 🤝 Contributing
-
-1. Follow the layered architecture (routes → controllers → services)
-2. Use the ResponseHandler for all responses
-3. Use the global error handler (throw custom errors)
-4. Add input validation with express-validator
-5. Write JSDoc comments for functions
-6. Keep services focused on business logic only
-
----
-
-## 📜 License
-
-MIT
-
----
-
-## 💬 Support
-
-For questions or issues:
-1. Check relevant documentation in `/docs` folder
-2. Review quick reference guides
-3. Check middleware/controller/service comments
-4. See troubleshooting section above
 
 
